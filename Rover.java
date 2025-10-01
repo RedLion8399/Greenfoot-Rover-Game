@@ -30,6 +30,35 @@ public class Rover extends Actor {
      * It moves the rover and shoots beams.
      */
     public void getUserInput() {
+        if (roverTyp == Typ.RED) {
+            if (Greenfoot.isKeyDown("up")) {
+                drive();
+            }
+            if (Greenfoot.isKeyDown("down")) {
+                shoot();
+            }
+            if (Greenfoot.isKeyDown("left")) {
+                turn(Direction.LEFT);
+            }
+            if (Greenfoot.isKeyDown("right")) {
+                turn(Direction.RIGHT);
+            }
+        }
+
+        if (roverTyp == Typ.BLUE) {
+            if (Greenfoot.isKeyDown("w")) {
+                drive();
+            }
+            if (Greenfoot.isKeyDown("s")) {
+                shoot();
+            }
+            if (Greenfoot.isKeyDown("a")) {
+                turn(Direction.LEFT);
+            }
+            if (Greenfoot.isKeyDown("d")) {
+                turn(Direction.RIGHT);
+            }
+        }
     }
 
     /**
@@ -41,6 +70,11 @@ public class Rover extends Actor {
      *                it will move backward
      */
     public void drive(boolean forward) {
+        if (forward) {
+            if (!isHillAhead()) {
+                move(1);
+            }
+        }
     }
 
     /**
@@ -49,6 +83,7 @@ public class Rover extends Actor {
      * will not move.
      */
     public void drive() {
+        drive(true);
     }
 
     /**
@@ -57,6 +92,12 @@ public class Rover extends Actor {
      * @param direction
      */
     public void turn(Direction direction) {
+        switch (direction) {
+            case RIGHT -> turn(90);
+            case LEFT -> turn(-90);
+            default -> {
+            }
+        }
     }
 
     /**
@@ -192,5 +233,16 @@ public class Rover extends Actor {
      */
     enum Typ {
         RED, BLUE
+    }
+
+    /**
+     * The direction the Rover is facing or turning.
+     * 
+     * 
+     * @version 0.1.0 - 01.10.2025
+     * @author Paul Jonas Dohle
+     */
+    enum Direction {
+        RIGHT, LEFT, FORWARD, BACKWARD;
     }
 }
