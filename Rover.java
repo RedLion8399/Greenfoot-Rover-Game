@@ -11,17 +11,17 @@ public class Rover extends Actor {
         int posX = getX();
         int posY = getY();
 
-        if (huegelVorhanden("vorne")) {
-            nachricht("Zu steil!");
+        if (isHill("vorne")) {
+            message("Zu steil!");
         } else if (getRotation() == 270 && getY() == 1) {
-            nachricht("Ich kann mich nicht bewegen");
+            message("Ich kann mich nicht bewegen");
         } else {
             move(1);
             Greenfoot.delay(1);
         }
 
-        if (posX == getX() && posY == getY() && !huegelVorhanden("vorne")) {
-            nachricht("Ich kann mich nicht bewegen");
+        if (posX == getX() && posY == getY() && !isHill("vorne")) {
+            message("Ich kann mich nicht bewegen");
         }
     }
 
@@ -31,17 +31,17 @@ public class Rover extends Actor {
         } else if (richtung == "links") {
             turn(-90);
         } else {
-            nachricht("Befehl nicht korrekt!");
+            message("Befehl nicht korrekt!");
         }
     }
 
     public boolean gesteinVorhanden() {
         if (getOneIntersectingObject(Gestein.class) != null) {
-            nachricht("Gestein gefunden!");
+            message("Gestein gefunden!");
             return true;
         }
 
-        nachricht("Kein Gestein vorhanden!");
+        message("Kein Gestein vorhanden!");
         return false;
     }
 
@@ -76,7 +76,7 @@ public class Rover extends Actor {
         }
 
         if (richtung != "vorne" && richtung != "links" && richtung != "rechts") {
-            nachricht("Befehl nicht korrekt!");
+            message("Befehl nicht korrekt!");
         }
 
         return false;
@@ -87,15 +87,15 @@ public class Rover extends Actor {
             Greenfoot.delay(1);
             removeTouching(Gestein.class);
         } else {
-            nachricht("Hier ist kein Gestein");
+            message("Hier ist kein Gestein");
         }
     }
 
-    private void nachricht(String pText) {
+    private void message(String pText) {
         if (anzeige != null) {
-            anzeige.anzeigen(pText);
+            anzeige.print(pText);
             Greenfoot.delay(1);
-            anzeige.loeschen();
+            anzeige.clear();
         }
     }
 
@@ -112,22 +112,16 @@ public class Rover extends Actor {
         if (getY() == 0) {
             setLocation(getX(), 1);
         }
-        anzeige.anzeigen("Ich bin bereit");
+        anzeige.print("Ich bin bereit");
     }
 
     class Display extends Actor {
-        GreenfootImage bild;
-
-        public Display() {
-            bild = getImage();
+        public void print(String message) {
+            clear();
+            getImage().drawImage(new GreenfootImage(message, 25, Color.BLACK, new Color(0, 0, 0, 0)), 10, 10);
         }
 
-        public void anzeigen(String pText) {
-            loeschen();
-            getImage().drawImage(new GreenfootImage(pText, 25, Color.BLACK, new Color(0, 0, 0, 0)), 10, 10);
-        }
-
-        public void loeschen() {
+        public void clear() {
             getImage().clear();
             setImage("images/nachricht.png");
         }
