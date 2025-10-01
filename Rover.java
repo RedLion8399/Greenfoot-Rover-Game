@@ -2,12 +2,12 @@ import greenfoot.*; // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 
 public class Rover extends Actor {
 
-    private Display anzeige;
+    private Display display;
 
     public void act() {
     }
 
-    public void fahre() {
+    public void drive() {
         int posX = getX();
         int posY = getY();
 
@@ -25,7 +25,7 @@ public class Rover extends Actor {
         }
     }
 
-    public void drehe(String richtung) {
+    public void turn(String richtung) {
         if (richtung == "rechts") {
             turn(90);
         } else if (richtung == "links") {
@@ -81,28 +81,28 @@ public class Rover extends Actor {
         }
     }
 
-    private void message(String pText) {
-        if (anzeige != null) {
-            anzeige.print(pText);
+    private void message(String messageText) {
+        if (display != null) {
+            display.print(messageText);
             Greenfoot.delay(1);
-            anzeige.clear();
+            display.clear();
         }
     }
 
-    private void displayAusschalten() {
-        getWorld().removeObject(anzeige);
+    private void shutdownDisplay() {
+        getWorld().removeObject(display);
     }
 
     protected void addedToWorld(World world) {
         setImage("images/rover.png");
         world = getWorld();
-        anzeige = new Display();
-        anzeige.setImage("images/nachricht.png");
-        world.addObject(anzeige, 7, 0);
+        display = new Display();
+        display.setImage("images/nachricht.png");
+        world.addObject(display, 7, 0);
         if (getY() == 0) {
             setLocation(getX(), 1);
         }
-        anzeige.print("Ich bin bereit");
+        display.print("Ich bin bereit");
     }
 
     class Display extends Actor {
