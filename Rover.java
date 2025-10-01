@@ -124,6 +124,12 @@ public class Rover extends Actor {
      * @return true if there is a hill ahead, false otherwise
      */
     public boolean isHillAhead() {
+        int rot = getRotation();
+
+        return (getOneObjectAtOffset(1, 0, Hill.class) != null && rot == 0) ||
+                (getOneObjectAtOffset(0, 1, Hill.class) != null && rot == 90) ||
+                (getOneObjectAtOffset(-1, 0, Hill.class) != null && rot == 180) ||
+                (getOneObjectAtOffset(0, -1, Hill.class) != null && rot == 270);
     }
 
     /**
