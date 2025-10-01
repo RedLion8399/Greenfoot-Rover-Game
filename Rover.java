@@ -25,6 +25,12 @@ public class Rover extends Actor {
      */
     public Rover(Typ roverTyp) {
         this.roverTyp = roverTyp;
+
+        if (roverTyp == Typ.RED) {
+            setImage("images/roverRed.png");
+        } else {
+            setImage("images/roverBlue.png");
+        }
     }
 
     /**
