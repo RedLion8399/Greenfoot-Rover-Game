@@ -1,119 +1,196 @@
 import greenfoot.*; // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 
+/**
+ * The Rover is the main character of the game.
+ * 
+ * The Rover is controlled by one of two players.
+ * It can drive, turn ad shoot (at least if it has
+ * munitions wich can be picked up).
+ * When hit it lossed lives until it is dead and the game is over.
+ * 
+ * @version 0.1.0 - 01.10.2025
+ * @author Paul Jonas Dohle
+ */
 public class Rover extends Actor {
 
-    private Display display;
+    private int munitions;
+    private int lives;
+    private Scoreboard scoreboard;
+    private Typ roverTyp;
 
+    /**
+     * The main method of the Rover.
+     * If the game runs this method is called in a loop.
+     */
     public void act() {
     }
 
+    /**
+     * Observes and processes the user's input from the keyboard.
+     * It moves the rover and shoots beams.
+     */
+    public void getUserInput() {
+    }
+
+    /**
+     * Move the Rover by one unit in the specified direction.
+     * If the rover is facing a hill or is on the edge of the world it
+     * will not move.
+     * 
+     * @param forward if true, the rover will move forward, if false,
+     *                it will move backward
+     */
+    public void drive(boolean forward) {
+    }
+
+    /**
+     * Move the Rover by one unit in the direction it is currently facing.
+     * If the rover is facing a hill or is on the edge of the world it
+     * will not move.
+     */
     public void drive() {
-        int posX = getX();
-        int posY = getY();
-
-        if (isHill("vorne")) {
-            message("Zu steil!");
-        } else if (getRotation() == 270 && getY() == 1) {
-            message("Ich kann mich nicht bewegen");
-        } else {
-            move(1);
-            Greenfoot.delay(1);
-        }
-
-        if (posX == getX() && posY == getY() && !isHill("vorne")) {
-            message("Ich kann mich nicht bewegen");
-        }
     }
 
-    public void turn(String richtung) {
-        if (richtung == "rechts") {
-            turn(90);
-        } else if (richtung == "links") {
-            turn(-90);
-        } else {
-            message("Befehl nicht korrekt!");
-        }
+    /**
+     * Turn the Rover by 90 degrees in the specified direction.
+     * 
+     * @param direction
+     */
+    public void turn(Direction direction) {
     }
 
-    public boolean isHill(String richtung) {
-        int rot = getRotation();
-
-        if (richtung == "vorne" && rot == 0 || richtung == "rechts" && rot == 270 || richtung == "links" && rot == 90) {
-            if (getOneObjectAtOffset(1, 0, Hill.class) != null) {
-                return true;
-            }
-        }
-
-        if (richtung == "vorne" && rot == 180 || richtung == "rechts" && rot == 90
-                || richtung == "links" && rot == 270) {
-            if (getOneObjectAtOffset(-1, 0, Hill.class) != null) {
-                return true;
-            }
-        }
-
-        if (richtung == "vorne" && rot == 90 || richtung == "rechts" && rot == 0 || richtung == "links" && rot == 180) {
-            if (getOneObjectAtOffset(0, 1, Hill.class) != null) {
-                return true;
-            }
-
-        }
-
-        if (richtung == "vorne" && rot == 270 || richtung == "rechts" && rot == 180
-                || richtung == "links" && rot == 0) {
-            if (getOneObjectAtOffset(0, -1, Hill.class) != null) {
-                return true;
-            }
-        }
-
-        if (richtung != "vorne" && richtung != "links" && richtung != "rechts") {
-            message("Befehl nicht korrekt!");
-        }
-
-        return false;
+    /**
+     * Shoots a beam in the direction the rover is currently facing.
+     * The beam will move until it hits the edge of the world, a hill or
+     * another rover.
+     * If it hits a rover, the rover which was hit will loose one life.
+     * If it hits a hill, the beam will be destroyed.
+     * The beam will move in a straight line until it hits something.
+     */
+    public void shoot() {
     }
 
+    /**
+     * Called when the rover has been hit by a beam.
+     * The rover will loose one life.
+     */
+    public void hit() {
+    }
+
+    /**
+     * Checks if there is a hill directly in front of the rover.
+     * 
+     * @return true if there is a hill ahead, false otherwise
+     */
+    public boolean isHillAhead() {
+    }
+
+    /**
+     * If the rover is standing on a charge object, this method
+     * will pick up the charge and add the munitions to the rover's
+     * current munitions.
+     */
     public void takeCharge() {
-        if (getOneIntersectingObject(Charge.class) != null) {
-            Greenfoot.delay(1);
-            removeTouching(Charge.class);
-        } else {
-            message("Hier ist kein Gestein");
-        }
-    }
-
-    private void message(String messageText) {
-        if (display != null) {
-            display.print(messageText);
-            Greenfoot.delay(1);
-            display.clear();
-        }
-    }
-
-    private void shutdownDisplay() {
-        getWorld().removeObject(display);
     }
 
     protected void addedToWorld(World world) {
-        setImage("images/rover.png");
-        world = getWorld();
-        display = new Display();
-        display.setImage("images/nachricht.png");
-        world.addObject(display, 7, 0);
-        if (getY() == 0) {
-            setLocation(getX(), 1);
-        }
-        display.print("Ich bin bereit");
     }
 
-    class Display extends Actor {
-        public void print(String message) {
-            clear();
-            getImage().drawImage(new GreenfootImage(message, 25, Color.BLACK, new Color(0, 0, 0, 0)), 10, 10);
+    /**
+     * A helper class for displaying the rovers lives and munitions.
+     * It also provides space for messages like a console.
+     * 
+     * @version 0.1.0 - 01.10.2025
+     * @author Paul Jonas Dohle
+     */
+    class Scoreboard extends Actor {
+
+        /**
+         * Updates the scoreboard to show the current lives and munitions of the rover.
+         * This method should be called every time the rover's lives or munitions
+         * change.
+         */
+        public void update() {
         }
 
+        /**
+         * Displays a message on a part of the Rover's scoreboard for one second.
+         * If the display is null, this method does nothing.
+         * 
+         * @param messageText the message to be displayed
+         */
+        private void message(String messageText) {
+        }
+
+        /**
+         * Clears the message on the scoreboard.
+         */
         public void clear() {
             getImage().clear();
             setImage("images/nachricht.png");
         }
+    }
+
+    /**
+     * A helper class for beams.
+     * 
+     * Beams are used to shoot at other rovers.
+     * If they hit a hill, they will be destroyed.
+     * If they hit a rover, the rover will loose one life.
+     * 
+     * @version 0.1.0 - 01.10.2025
+     * @author Paul Jonas Dohle
+     */
+    class Beam extends Actor {
+        /**
+         * Creates a new beam shooting in the direction
+         * the rover is currently facing.
+         */
+        public Beam() {
+        }
+
+        /**
+         * Moves the beam in the direction it is currently
+         * facing.
+         */
+        public void act() {
+        }
+
+        /**
+         * Checks if the beam has hit a hill.
+         * 
+         * @return true if the beam has hit a hill, false otherwise
+         */
+        public boolean isHillHit() {
+        }
+
+        /**
+         * Checks if the beam has hit a rover.
+         * 
+         * @return true if the beam has hit a rover, false otherwise
+         */
+        public boolean isRoverHit() {
+        }
+
+        /**
+         * Checks if the beam has hit the edge of the world.
+         * 
+         * @return true if the beam has hit the edge of the world, false otherwise
+         */
+        public boolean isEdgeHit() {
+        }
+    }
+
+    /**
+     * The type of the Rover.
+     * 
+     * @link Typ#RED
+     * @link Typ#BLUE
+     * 
+     * @version 0.1.0 - 01.10.2025
+     * @author Paul Jonas Dohle
+     */
+    enum Typ {
+        RED, BLUE
     }
 }
