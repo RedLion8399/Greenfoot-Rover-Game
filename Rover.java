@@ -155,9 +155,6 @@ public class Rover extends Actor {
     public void takeCharge() {
     }
 
-    protected void addedToWorld(World world) {
-    }
-
     /**
      * A helper class for displaying the rovers lives and munitions.
      * It also provides space for messages like a console.
