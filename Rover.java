@@ -35,16 +35,6 @@ public class Rover extends Actor {
         }
     }
 
-    public boolean gesteinVorhanden() {
-        if (getOneIntersectingObject(Gestein.class) != null) {
-            message("Gestein gefunden!");
-            return true;
-        }
-
-        message("Kein Gestein vorhanden!");
-        return false;
-    }
-
     public boolean isHill(String richtung) {
         int rot = getRotation();
 
@@ -82,10 +72,10 @@ public class Rover extends Actor {
         return false;
     }
 
-    public void nimmGestein() {
-        if (gesteinVorhanden()) {
+    public void takeCharge() {
+        if (getOneIntersectingObject(Charge.class) != null) {
             Greenfoot.delay(1);
-            removeTouching(Gestein.class);
+            removeTouching(Charge.class);
         } else {
             message("Hier ist kein Gestein");
         }
