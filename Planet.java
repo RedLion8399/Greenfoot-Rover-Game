@@ -6,7 +6,7 @@ public class Planet extends World {
     public Planet() {
         super(16, 12, zellenGroesse);
         setBackground("images/boden.png");
-        setPaintOrder(String.class, Rover.class, Gestein.class, Huegel.class);
+        setPaintOrder(String.class, Rover.class, Gestein.class, Hill.class);
         Greenfoot.setSpeed(20);
     }
 }

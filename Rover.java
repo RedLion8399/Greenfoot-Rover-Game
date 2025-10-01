@@ -45,24 +45,24 @@ public class Rover extends Actor {
         return false;
     }
 
-    public boolean huegelVorhanden(String richtung) {
+    public boolean isHill(String richtung) {
         int rot = getRotation();
 
         if (richtung == "vorne" && rot == 0 || richtung == "rechts" && rot == 270 || richtung == "links" && rot == 90) {
-            if (getOneObjectAtOffset(1, 0, Huegel.class) != null) {
+            if (getOneObjectAtOffset(1, 0, Hill.class) != null) {
                 return true;
             }
         }
 
         if (richtung == "vorne" && rot == 180 || richtung == "rechts" && rot == 90
                 || richtung == "links" && rot == 270) {
-            if (getOneObjectAtOffset(-1, 0, Huegel.class) != null) {
+            if (getOneObjectAtOffset(-1, 0, Hill.class) != null) {
                 return true;
             }
         }
 
         if (richtung == "vorne" && rot == 90 || richtung == "rechts" && rot == 0 || richtung == "links" && rot == 180) {
-            if (getOneObjectAtOffset(0, 1, Huegel.class) != null) {
+            if (getOneObjectAtOffset(0, 1, Hill.class) != null) {
                 return true;
             }
 
@@ -70,7 +70,7 @@ public class Rover extends Actor {
 
         if (richtung == "vorne" && rot == 270 || richtung == "rechts" && rot == 180
                 || richtung == "links" && rot == 0) {
-            if (getOneObjectAtOffset(0, -1, Huegel.class) != null) {
+            if (getOneObjectAtOffset(0, -1, Hill.class) != null) {
                 return true;
             }
         }
