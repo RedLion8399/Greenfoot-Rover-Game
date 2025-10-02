@@ -20,17 +20,17 @@ public class Planet extends World {
      * It also instanciates the Rover objects for each player
      */
     public Planet() {
-        super(16, 12, zellenGroesse);
+        super(24, 12, zellenGroesse);
         setBackground("images/boden.png");
         setPaintOrder(String.class, Rover.class, Charge.class, Hill.class);
         Greenfoot.setSpeed(20);
 
         playerRed = new Rover(Rover.Typ.RED);
         playerBlue = new Rover(Rover.Typ.BLUE);
-        addObject(playerRed, 1, 5);
+        addObject(playerRed, 5, 5);
         playerRed.setRotation(180);
 
-        addObject(playerBlue, 14, 6);
+        addObject(playerBlue, 18, 6);
     }
 
     /**

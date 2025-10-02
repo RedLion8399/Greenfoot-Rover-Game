@@ -8,7 +8,7 @@ import greenfoot.*; // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
  * munitions wich can be picked up).
  * When hit it lossed lives until it is dead and the game is over.
  * 
- * @version 0.1.0 - 01.10.2025
+ * @version 0.2.0 - 02.10.2025
  * @author Paul Jonas Dohle
  */
 public class Rover extends Actor {
@@ -38,6 +38,8 @@ public class Rover extends Actor {
      * If the game runs this method is called in a loop.
      */
     public void act() {
+        getUserInput();
+        scoreboard.update();
     }
 
     /**
@@ -86,9 +88,10 @@ public class Rover extends Actor {
      */
     public void drive(boolean forward) {
         if (forward) {
-            if (!isHillAhead()) {
-                move(1);
+            if (isHillAhead() || isRoverahead() || isScoreboardAhead()) {
+                return;
             }
+            move(1);
         }
     }
 
@@ -134,17 +137,46 @@ public class Rover extends Actor {
     }
 
     /**
+     * Checks if there is an object of the specified class directly ahead
+     * of the rover. The rover's direction is taken into account.
+     * 
+     * @param object the class of objects to check for
+     * @return true if there is an object ahead, false otherwise
+     */
+    public boolean isObjectAhead(Class<? extends Actor> object) {
+        int rot = getRotation();
+
+        return (getOneObjectAtOffset(1, 0, object) != null && rot == 0) ||
+                (getOneObjectAtOffset(0, 1, object) != null && rot == 90) ||
+                (getOneObjectAtOffset(-1, 0, object) != null && rot == 180) ||
+                (getOneObjectAtOffset(0, -1, object) != null && rot == 270);
+    }
+
+    /**
      * Checks if there is a hill directly in front of the rover.
      * 
      * @return true if there is a hill ahead, false otherwise
      */
     public boolean isHillAhead() {
-        int rot = getRotation();
+        return isObjectAhead(Hill.class);
+    }
 
-        return (getOneObjectAtOffset(1, 0, Hill.class) != null && rot == 0) ||
-                (getOneObjectAtOffset(0, 1, Hill.class) != null && rot == 90) ||
-                (getOneObjectAtOffset(-1, 0, Hill.class) != null && rot == 180) ||
-                (getOneObjectAtOffset(0, -1, Hill.class) != null && rot == 270);
+    /**
+     * Checks if there is a rover directly in front of the rover.
+     * 
+     * @return true if there is a rover ahead, false otherwise
+     */
+    public boolean isRoverahead() {
+        return isObjectAhead(Rover.class);
+    }
+
+    /**
+     * Checks if there is a Scoreboard directly in front of the rover.
+     * 
+     * @return true if there is a Scoreboard ahead, false otherwise
+     */
+    public boolean isScoreboardAhead() {
+        return isObjectAhead(Scoreboard.class);
     }
 
     /**
@@ -155,14 +187,29 @@ public class Rover extends Actor {
     public void takeCharge() {
     }
 
+    protected void addedToWorld(World world) {
+        scoreboard = new Scoreboard(world);
+    }
+
     /**
      * A helper class for displaying the rovers lives and munitions.
-     * It also provides space for messages like a console.
      * 
-     * @version 0.1.0 - 01.10.2025
+     * @version 1.0.0 - 02.10.2025
      * @author Paul Jonas Dohle
      */
     class Scoreboard extends Actor {
+
+        private String message;
+
+        public Scoreboard(World world) {
+            setImage("images/nachricht.png");
+
+            if (roverTyp == Typ.RED) {
+                world.addObject(this, 2, 3);
+            } else {
+                world.addObject(this, 21, 3);
+            }
+        }
 
         /**
          * Updates the scoreboard to show the current lives and munitions of the rover.
@@ -170,15 +217,12 @@ public class Rover extends Actor {
          * change.
          */
         public void update() {
-        }
+            String messageText = String.format(
+                    "Player: %s\n\nLives left: %d\nShots left: %d",
+                    (roverTyp == Typ.RED ? "Red" : "Blue"), lives, munitions);
 
-        /**
-         * Displays a message on a part of the Rover's scoreboard for one second.
-         * If the display is null, this method does nothing.
-         * 
-         * @param messageText the message to be displayed
-         */
-        private void message(String messageText) {
+            clear();
+            getImage().drawImage(new GreenfootImage(messageText, 25, Color.BLACK, new Color(0, 0, 0, 0)), 10, 10);
         }
 
         /**
