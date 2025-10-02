@@ -19,6 +19,21 @@ public class Rover extends Actor {
     private Typ roverTyp;
 
     /**
+     * Creates a new Rover.
+     * 
+     * @param roverTyp the type of the Rover
+     */
+    public Rover(Typ roverTyp) {
+        this.roverTyp = roverTyp;
+
+        if (roverTyp == Typ.RED) {
+            setImage("images/roverRed.png");
+        } else {
+            setImage("images/roverBlue.png");
+        }
+    }
+
+    /**
      * The main method of the Rover.
      * If the game runs this method is called in a loop.
      */
@@ -140,9 +155,6 @@ public class Rover extends Actor {
     public void takeCharge() {
     }
 
-    protected void addedToWorld(World world) {
-    }
-
     /**
      * A helper class for displaying the rovers lives and munitions.
      * It also provides space for messages like a console.
@@ -237,7 +249,7 @@ public class Rover extends Actor {
      * @version 0.1.0 - 01.10.2025
      * @author Paul Jonas Dohle
      */
-    enum Typ {
+    public enum Typ {
         RED, BLUE
     }
 
