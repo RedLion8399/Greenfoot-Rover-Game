@@ -25,6 +25,8 @@ public class Rover extends Actor {
      */
     public Rover(Typ roverTyp) {
         this.roverTyp = roverTyp;
+        this.lives = 5;
+        this.munitions = 5;
 
         if (roverTyp == Typ.RED) {
             setImage("images/roverRed.png");
@@ -139,6 +141,7 @@ public class Rover extends Actor {
      * The rover will loose one life.
      */
     public void hit() {
+        lives--;
     }
 
     /**
