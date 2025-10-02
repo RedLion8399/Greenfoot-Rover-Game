@@ -86,9 +86,10 @@ public class Rover extends Actor {
      */
     public void drive(boolean forward) {
         if (forward) {
-            if (!isHillAhead()) {
-                move(1);
+            if (isHillAhead() || isRoverahead() || isScoreboardAhead()) {
+                return;
             }
+            move(1);
         }
     }
 
@@ -134,17 +135,46 @@ public class Rover extends Actor {
     }
 
     /**
+     * Checks if there is an object of the specified class directly ahead
+     * of the rover. The rover's direction is taken into account.
+     * 
+     * @param object the class of objects to check for
+     * @return true if there is an object ahead, false otherwise
+     */
+    public boolean isObjectAhead(Class<? extends Actor> object) {
+        int rot = getRotation();
+
+        return (getOneObjectAtOffset(1, 0, object) != null && rot == 0) ||
+                (getOneObjectAtOffset(0, 1, object) != null && rot == 90) ||
+                (getOneObjectAtOffset(-1, 0, object) != null && rot == 180) ||
+                (getOneObjectAtOffset(0, -1, object) != null && rot == 270);
+    }
+
+    /**
      * Checks if there is a hill directly in front of the rover.
      * 
      * @return true if there is a hill ahead, false otherwise
      */
     public boolean isHillAhead() {
-        int rot = getRotation();
+        return isObjectAhead(Hill.class);
+    }
 
-        return (getOneObjectAtOffset(1, 0, Hill.class) != null && rot == 0) ||
-                (getOneObjectAtOffset(0, 1, Hill.class) != null && rot == 90) ||
-                (getOneObjectAtOffset(-1, 0, Hill.class) != null && rot == 180) ||
-                (getOneObjectAtOffset(0, -1, Hill.class) != null && rot == 270);
+    /**
+     * Checks if there is a rover directly in front of the rover.
+     * 
+     * @return true if there is a rover ahead, false otherwise
+     */
+    public boolean isRoverahead() {
+        return isObjectAhead(Rover.class);
+    }
+
+    /**
+     * Checks if there is a Scoreboard directly in front of the rover.
+     * 
+     * @return true if there is a Scoreboard ahead, false otherwise
+     */
+    public boolean isScoreboardAhead() {
+        return isObjectAhead(Scoreboard.class);
     }
 
     /**
