@@ -8,7 +8,7 @@ import greenfoot.*; // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
  * munitions wich can be picked up).
  * When hit it lossed lives until it is dead and the game is over.
  * 
- * @version 0.1.0 - 01.10.2025
+ * @version 0.2.0 - 02.10.2025
  * @author Paul Jonas Dohle
  */
 public class Rover extends Actor {
@@ -38,6 +38,8 @@ public class Rover extends Actor {
      * If the game runs this method is called in a loop.
      */
     public void act() {
+        getUserInput();
+        scoreboard.update();
     }
 
     /**
@@ -191,12 +193,13 @@ public class Rover extends Actor {
 
     /**
      * A helper class for displaying the rovers lives and munitions.
-     * It also provides space for messages like a console.
      * 
-     * @version 0.1.0 - 01.10.2025
+     * @version 1.0.0 - 02.10.2025
      * @author Paul Jonas Dohle
      */
     class Scoreboard extends Actor {
+
+        private String message;
 
         public Scoreboard(World world) {
             setImage("images/nachricht.png");
@@ -214,15 +217,12 @@ public class Rover extends Actor {
          * change.
          */
         public void update() {
-        }
+            String messageText = String.format(
+                    "Player: %s\n\nLives left: %d\nShots left: %d",
+                    (roverTyp == Typ.RED ? "Red" : "Blue"), lives, munitions);
 
-        /**
-         * Displays a message on a part of the Rover's scoreboard for one second.
-         * If the display is null, this method does nothing.
-         * 
-         * @param messageText the message to be displayed
-         */
-        private void message(String messageText) {
+            clear();
+            getImage().drawImage(new GreenfootImage(messageText, 25, Color.BLACK, new Color(0, 0, 0, 0)), 10, 10);
         }
 
         /**
