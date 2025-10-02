@@ -128,6 +128,10 @@ public class Rover extends Actor {
      * The beam will move in a straight line until it hits something.
      */
     public void shoot() {
+        if (munitions > 0) {
+            Beam beam = new Beam(this);
+            munitions--;
+        }
     }
 
     /**
@@ -247,15 +251,22 @@ public class Rover extends Actor {
      * If they hit a hill, they will be destroyed.
      * If they hit a rover, the rover will loose one life.
      * 
-     * @version 0.1.0 - 01.10.2025
+     * @version 1.0.0 - 02.10.2025
      * @author Paul Jonas Dohle
      */
     class Beam extends Actor {
+
+        private Rover shooter;
+
         /**
          * Creates a new beam shooting in the direction
          * the rover is currently facing.
          */
-        public Beam() {
+        public Beam(Rover shooter) {
+            setImage("images/beam.png");
+            this.shooter = shooter;
+            shooter.getWorld().addObject(this, shooter.getX(), shooter.getY());
+            setRotation(shooter.getRotation());
         }
 
         /**
@@ -263,6 +274,26 @@ public class Rover extends Actor {
          * facing.
          */
         public void act() {
+            int x = this.getX();
+            int y = this.getY();
+
+            if (isHillHit() || isScoreboardHit()) {
+                getWorld().removeObject(this);
+                return;
+            }
+
+            if (isRoverHit()) {
+                ((Rover) getOneObjectAtOffset(0, 0, Rover.class)).hit();
+                getWorld().removeObject(this);
+                return;
+            }
+
+            move(1);
+
+            if (x == this.getX() && y == this.getY()) {
+                // If it is stuck at the edge, remove it
+                getWorld().removeObject(this);
+            }
         }
 
         /**
@@ -271,6 +302,16 @@ public class Rover extends Actor {
          * @return true if the beam has hit a hill, false otherwise
          */
         public boolean isHillHit() {
+            return (getOneObjectAtOffset(0, 0, Hill.class) != null);
+        }
+
+        /**
+         * Checks if the beam has hit a scoreboard.
+         * 
+         * @return true if the beam has hit a scoreboard, false otherwise
+         */
+        public boolean isScoreboardHit() {
+            return (getOneObjectAtOffset(0, 0, Scoreboard.class) != null);
         }
 
         /**
@@ -279,14 +320,8 @@ public class Rover extends Actor {
          * @return true if the beam has hit a rover, false otherwise
          */
         public boolean isRoverHit() {
-        }
-
-        /**
-         * Checks if the beam has hit the edge of the world.
-         * 
-         * @return true if the beam has hit the edge of the world, false otherwise
-         */
-        public boolean isEdgeHit() {
+            return (getOneObjectAtOffset(0, 0, Rover.class) != null &&
+                    getOneObjectAtOffset(0, 0, Rover.class) != shooter);
         }
     }
 
