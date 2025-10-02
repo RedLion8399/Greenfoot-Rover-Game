@@ -8,7 +8,7 @@ import greenfoot.*; // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
  * munitions wich can be picked up).
  * When hit it lossed lives until it is dead and the game is over.
  * 
- * @version 0.2.0 - 02.10.2025
+ * @version 0.3.0 - 02.10.2025
  * @author Paul Jonas Dohle
  */
 public class Rover extends Actor {
@@ -92,6 +92,7 @@ public class Rover extends Actor {
                 return;
             }
             move(1);
+            takeCharge();
         }
     }
 
@@ -185,6 +186,11 @@ public class Rover extends Actor {
      * current munitions.
      */
     public void takeCharge() {
+        if (getOneObjectAtOffset(0, 0, Charge.class) != null) {
+            Charge charge = (Charge) getOneObjectAtOffset(0, 0, Charge.class);
+            this.munitions += charge.munitions;
+            getWorld().removeObject(charge);
+        }
     }
 
     protected void addedToWorld(World world) {
