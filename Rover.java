@@ -128,6 +128,12 @@ public class Rover extends Actor {
      * The beam will move in a straight line until it hits something.
      */
     public void shoot() {
+        if (munitions > 0) {
+            Beam beam = new Beam();
+            beam.setRotation(getRotation());
+            getWorld().addObject(beam, getX(), getY());
+            munitions--;
+        }
     }
 
     /**
@@ -256,6 +262,7 @@ public class Rover extends Actor {
          * the rover is currently facing.
          */
         public Beam() {
+            setImage("images/beam.png");
         }
 
         /**
@@ -263,6 +270,7 @@ public class Rover extends Actor {
          * facing.
          */
         public void act() {
+            move(1);
         }
 
         /**
