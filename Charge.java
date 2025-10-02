@@ -12,21 +12,27 @@ public class Charge extends Actor {
     public int munitions;
 
     /**
-     * The Charge is created at the given position
-     * with a random color of either red or blue.
-     * It generates a random amount of munitions.
+     * Creates a new charge with a random color.
      * 
-     * @param x the x position of the Charge
-     * @param y the y position of the Charge
-     * 
-     * @version 0.1.0 - 01.10.2025
+     * @version 1.0.0 - 02.10.2025
      * @author Paul Jonas Dohle
      */
-    public Charge(int x, int y) {
+    public Charge() {
         if (Greenfoot.getRandomNumber(2) == 0) {
             setImage("images/chargeRed.png");
         } else {
             setImage("images/chargeBlue.png");
+        }
+
+        int randomNumber = Greenfoot.getRandomNumber(100);
+        if (randomNumber < 40) {
+            this.munitions += 1;
+        } else if (randomNumber < 70) {
+            this.munitions += 2;
+        } else if (randomNumber < 90) {
+            this.munitions += 3;
+        } else {
+            this.munitions += 4;
         }
     }
 }
