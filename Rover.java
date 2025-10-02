@@ -155,6 +155,10 @@ public class Rover extends Actor {
     public void takeCharge() {
     }
 
+    protected void addedToWorld(World world) {
+        scoreboard = new Scoreboard(world);
+    }
+
     /**
      * A helper class for displaying the rovers lives and munitions.
      * It also provides space for messages like a console.
@@ -163,6 +167,16 @@ public class Rover extends Actor {
      * @author Paul Jonas Dohle
      */
     class Scoreboard extends Actor {
+
+        public Scoreboard(World world) {
+            setImage("images/nachricht.png");
+
+            if (roverTyp == Typ.RED) {
+                world.addObject(this, 2, 3);
+            } else {
+                world.addObject(this, 21, 3);
+            }
+        }
 
         /**
          * Updates the scoreboard to show the current lives and munitions of the rover.
