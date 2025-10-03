@@ -202,6 +202,18 @@ public class Rover extends Actor {
     }
 
     /**
+     * Moves the rover to the specified distance in the x direction
+     * while changing y based on the current rotation.
+     * 
+     * @param xDistance the distance to move in the x direction
+     */
+    public void move(int absoluteDistance) {
+        int xDistance = (int) (absoluteDistance * Math.cos(Math.toRadians(getRotation())));
+        int yDistance = (int) (absoluteDistance * Math.sin(Math.toRadians(getRotation())));
+        setLocation(getX() + xDistance, getY() + yDistance);
+    }
+
+    /**
      * A helper class for displaying the rovers lives and munitions.
      * 
      * @version 1.0.0 - 02.10.2025

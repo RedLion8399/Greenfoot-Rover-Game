@@ -52,7 +52,7 @@ public class Planet extends World {
                 randY = Greenfoot.getRandomNumber(getHeight());
                 randX -= (randX % 50) - 25;
                 randY -= (randY % 50) - 25;
-            } while (randY < 350 && randX < 250 || randY < 350 && randX > 1025); // Avoid the scoreboards
+            } while (getObjectsAt(randX, randY, Rover.Scoreboard.class).size() > 0);
             Charge charge = new Charge();
             addObject(charge, randX, randY);
         }
