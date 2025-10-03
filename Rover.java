@@ -239,9 +239,9 @@ public class Rover extends Actor {
             setImage("images/nachricht.png");
 
             if (roverTyp == Typ.RED) {
-                world.addObject(this, 135, 175);
+                world.addObject(this, 125, 125);
             } else {
-                world.addObject(this, 1175, 175);
+                world.addObject(this, 1175, 125);
             }
         }
 
