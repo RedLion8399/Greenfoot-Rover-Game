@@ -50,7 +50,9 @@ public class Planet extends World {
             do {
                 randX = Greenfoot.getRandomNumber(getWidth());
                 randY = Greenfoot.getRandomNumber(getHeight());
-            } while (randY < 7 && randX < 5 || randY < 7 && randX > 18); // Avoid the scoreboards
+                randX -= (randX % 50) - 25;
+                randY -= (randY % 50) - 25;
+            } while (randY < 350 && randX < 250 || randY < 350 && randX > 1025); // Avoid the scoreboards
             Charge charge = new Charge();
             addObject(charge, randX, randY);
         }

@@ -22,4 +22,16 @@ public class Hill extends Actor {
      */
     public Hill(int x, int y) {
     }
+
+    protected void addedToWorld(World world) {
+        allignToGrid();
+    }
+
+    private void allignToGrid() {
+        int x = getX();
+        int y = getY();
+        x -= (x % 50) - 25;
+        y -= (y % 50) - 25;
+        setLocation(x, y);
+    }
 }
