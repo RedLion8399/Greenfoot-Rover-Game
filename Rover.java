@@ -91,7 +91,7 @@ public class Rover extends Actor {
             if (isHillAhead() || isRoverahead() || isScoreboardAhead()) {
                 return;
             }
-            move(1);
+            move(10);
             takeCharge();
         }
     }
@@ -106,14 +106,14 @@ public class Rover extends Actor {
     }
 
     /**
-     * Turn the Rover by 90 degrees in the specified direction.
+     * Turn the Rover by 10 degrees in the specified direction.
      * 
      * @param direction
      */
     public void turn(Direction direction) {
         switch (direction) {
-            case RIGHT -> turn(90);
-            case LEFT -> turn(-90);
+            case RIGHT -> turn(10);
+            case LEFT -> turn(-10);
             default -> {
             }
         }
@@ -215,9 +215,9 @@ public class Rover extends Actor {
             setImage("images/nachricht.png");
 
             if (roverTyp == Typ.RED) {
-                world.addObject(this, 2, 3);
+                world.addObject(this, 135, 175);
             } else {
-                world.addObject(this, 21, 3);
+                world.addObject(this, 1175, 175);
             }
         }
 
@@ -288,7 +288,7 @@ public class Rover extends Actor {
                 return;
             }
 
-            move(1);
+            move(25);
 
             if (x == this.getX() && y == this.getY()) {
                 // If it is stuck at the edge, remove it
