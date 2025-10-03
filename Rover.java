@@ -1,3 +1,5 @@
+import java.util.List;
+
 import greenfoot.*; // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 
 /**
@@ -17,6 +19,7 @@ public class Rover extends Actor {
     private int lives;
     private Scoreboard scoreboard;
     private Typ roverTyp;
+    private int moveSpeed = 10;
 
     /**
      * Creates a new Rover.
@@ -91,7 +94,7 @@ public class Rover extends Actor {
             if (isHillAhead() || isRoverahead() || isScoreboardAhead()) {
                 return;
             }
-            move(10);
+            move(moveSpeed);
             takeCharge();
         }
     }
@@ -112,8 +115,8 @@ public class Rover extends Actor {
      */
     public void turn(Direction direction) {
         switch (direction) {
-            case RIGHT -> turn(10);
-            case LEFT -> turn(-10);
+            case RIGHT -> turn(moveSpeed);
+            case LEFT -> turn(-moveSpeed);
             default -> {
             }
         }
@@ -149,12 +152,8 @@ public class Rover extends Actor {
      * @return true if there is an object ahead, false otherwise
      */
     public boolean isObjectAhead(Class<? extends Actor> object) {
-        int rot = getRotation();
-
-        return (getOneObjectAtOffset(1, 0, object) != null && rot == 0) ||
-                (getOneObjectAtOffset(0, 1, object) != null && rot == 90) ||
-                (getOneObjectAtOffset(-1, 0, object) != null && rot == 180) ||
-                (getOneObjectAtOffset(0, -1, object) != null && rot == 270);
+        int[] nextPosition = getPositionInSteps(moveSpeed);
+        return getOneObjectAtOffset(nextPosition[0], nextPosition[1], object) != null;
     }
 
     /**
@@ -208,9 +207,22 @@ public class Rover extends Actor {
      * @param xDistance the distance to move in the x direction
      */
     public void move(int absoluteDistance) {
+        int[] nextPosition = getPositionInSteps(absoluteDistance);
+        setLocation(getX() + nextPosition[0], getY() + nextPosition[1]);
+    }
+
+    /**
+     * Calculates the next position in steps based on the absolute distance
+     * and the current rotation.
+     * 
+     * @param absoluteDistance the absolute distance to move
+     * @return an array containing the x and y distances to move
+     */
+    private int[] getPositionInSteps(int absoluteDistance) {
         int xDistance = (int) (absoluteDistance * Math.cos(Math.toRadians(getRotation())));
         int yDistance = (int) (absoluteDistance * Math.sin(Math.toRadians(getRotation())));
-        setLocation(getX() + xDistance, getY() + yDistance);
+
+        return new int[] { xDistance, yDistance };
     }
 
     /**
@@ -295,7 +307,7 @@ public class Rover extends Actor {
             }
 
             if (isRoverHit()) {
-                ((Rover) getOneObjectAtOffset(0, 0, Rover.class)).hit();
+                ((Rover) getOneIntersectingObject(Rover.class)).hit();
                 getWorld().removeObject(this);
                 return;
             }
@@ -314,7 +326,7 @@ public class Rover extends Actor {
          * @return true if the beam has hit a hill, false otherwise
          */
         public boolean isHillHit() {
-            return (getOneObjectAtOffset(0, 0, Hill.class) != null);
+            return (getOneIntersectingObject(Hill.class) != null);
         }
 
         /**
@@ -323,7 +335,7 @@ public class Rover extends Actor {
          * @return true if the beam has hit a scoreboard, false otherwise
          */
         public boolean isScoreboardHit() {
-            return (getOneObjectAtOffset(0, 0, Scoreboard.class) != null);
+            return (getOneIntersectingObject(Scoreboard.class) != null);
         }
 
         /**
@@ -332,8 +344,8 @@ public class Rover extends Actor {
          * @return true if the beam has hit a rover, false otherwise
          */
         public boolean isRoverHit() {
-            return (getOneObjectAtOffset(0, 0, Rover.class) != null &&
-                    getOneObjectAtOffset(0, 0, Rover.class) != shooter);
+            return (getOneIntersectingObject(Rover.class) != null &&
+                    getOneIntersectingObject(Rover.class) != shooter);
         }
     }
 
