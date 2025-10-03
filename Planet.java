@@ -21,6 +21,8 @@ public class Planet extends World {
      */
     public Planet() {
         super(1300, 850, 1);
+
+        Greenfoot.setSpeed(50);
         setBackground("images/boden.png");
         setPaintOrder(String.class, Rover.class, Charge.class, Hill.class);
 
@@ -44,7 +46,7 @@ public class Planet extends World {
      * Aproximately every 200th call of this method a charge will be generated.
      */
     public void generateCharges() {
-        if (Greenfoot.getRandomNumber(80) == 0) {
+        if (Greenfoot.getRandomNumber(200) == 0) {
             int randX;
             int randY;
             do {

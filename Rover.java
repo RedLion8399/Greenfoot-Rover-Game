@@ -96,6 +96,7 @@ public class Rover extends Actor {
             }
             move(moveSpeed);
             takeCharge();
+            sleepFor(1);
         }
     }
 
@@ -115,8 +116,9 @@ public class Rover extends Actor {
      */
     public void turn(Direction direction) {
         switch (direction) {
-            case RIGHT -> turn(moveSpeed);
-            case LEFT -> turn(-moveSpeed);
+            // Max rotation the Rover can mathematically possible drive is 10 degrees
+            case RIGHT -> turn(10);
+            case LEFT -> turn(-10);
             default -> {
             }
         }
@@ -134,6 +136,8 @@ public class Rover extends Actor {
         if (munitions > 0) {
             Beam beam = new Beam(this);
             munitions--;
+
+            sleepFor(10);
         }
     }
 
@@ -312,7 +316,7 @@ public class Rover extends Actor {
                 return;
             }
 
-            move(25);
+            move((int) (moveSpeed * 1.8));
 
             if (x == this.getX() && y == this.getY()) {
                 // If it is stuck at the edge, remove it
