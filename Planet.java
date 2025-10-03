@@ -24,7 +24,7 @@ public class Planet extends World {
 
         Greenfoot.setSpeed(50);
         setBackground("images/boden.png");
-        setPaintOrder(String.class, Rover.class, Charge.class, Hill.class);
+        setPaintOrder(Rover.Fire.class, String.class, Rover.class, Charge.class, Hill.class);
 
         playerRed = new Rover(Rover.Typ.RED);
         playerBlue = new Rover(Rover.Typ.BLUE);
