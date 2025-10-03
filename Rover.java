@@ -318,6 +318,10 @@ public class Rover extends Actor {
                 // If it is stuck at the edge, remove it
                 getWorld().removeObject(this);
             }
+
+            if (isAtEdge()) {
+                getWorld().removeObject(this);
+            }
         }
 
         /**
@@ -346,6 +350,11 @@ public class Rover extends Actor {
         public boolean isRoverHit() {
             return (getOneIntersectingObject(Rover.class) != null &&
                     getOneIntersectingObject(Rover.class) != shooter);
+        }
+
+        public boolean isAtEdge() {
+            return (getX() <= 0 || getX() + 2 >= getWorld().getWidth() ||
+                    getY() <= 0 || getY() + 2 >= getWorld().getHeight());
         }
     }
 
