@@ -10,27 +10,28 @@ import greenfoot.*; // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
  * @author Paul Jonas Dohle
  */
 public class Planet extends World {
-    private static int zellenGroesse = 50;
 
     private Rover playerRed;
     private Rover playerBlue;
 
     /**
-     * Creates a new world with a size of 16x12 cells and instanciates the players
+     * Creates a new world with a size of 26x17 cells with a cell size of 50x50
+     * pixels although the movement is undependent of the cell size.
      * It also instanciates the Rover objects for each player
      */
     public Planet() {
-        super(24, 12, zellenGroesse);
+        super(1300, 850, 1);
+
+        Greenfoot.setSpeed(50);
         setBackground("images/boden.png");
         setPaintOrder(String.class, Rover.class, Charge.class, Hill.class);
-        Greenfoot.setSpeed(20);
 
         playerRed = new Rover(Rover.Typ.RED);
         playerBlue = new Rover(Rover.Typ.BLUE);
-        addObject(playerRed, 5, 5);
+        addObject(playerRed, 75, 425);
         playerRed.setRotation(180);
 
-        addObject(playerBlue, 18, 6);
+        addObject(playerBlue, 1225, 425);
     }
 
     /**
@@ -45,13 +46,15 @@ public class Planet extends World {
      * Aproximately every 200th call of this method a charge will be generated.
      */
     public void generateCharges() {
-        if (Greenfoot.getRandomNumber(80) == 0) {
+        if (Greenfoot.getRandomNumber(200) == 0) {
             int randX;
             int randY;
             do {
                 randX = Greenfoot.getRandomNumber(getWidth());
                 randY = Greenfoot.getRandomNumber(getHeight());
-            } while (randY < 7 && randX < 5 || randY < 7 && randX > 18); // Avoid the scoreboards
+                randX -= (randX % 50) - 25;
+                randY -= (randY % 50) - 25;
+            } while (getObjectsAt(randX, randY, Rover.Scoreboard.class).size() > 0);
             Charge charge = new Charge();
             addObject(charge, randX, randY);
         }

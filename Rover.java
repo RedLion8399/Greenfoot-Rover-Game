@@ -1,3 +1,5 @@
+import java.util.List;
+
 import greenfoot.*; // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 
 /**
@@ -17,6 +19,7 @@ public class Rover extends Actor {
     private int lives;
     private Scoreboard scoreboard;
     private Typ roverTyp;
+    private int moveSpeed = 10;
 
     /**
      * Creates a new Rover.
@@ -91,8 +94,9 @@ public class Rover extends Actor {
             if (isHillAhead() || isRoverahead() || isScoreboardAhead()) {
                 return;
             }
-            move(1);
+            move(moveSpeed);
             takeCharge();
+            sleepFor(1);
         }
     }
 
@@ -106,14 +110,15 @@ public class Rover extends Actor {
     }
 
     /**
-     * Turn the Rover by 90 degrees in the specified direction.
+     * Turn the Rover by 10 degrees in the specified direction.
      * 
      * @param direction
      */
     public void turn(Direction direction) {
         switch (direction) {
-            case RIGHT -> turn(90);
-            case LEFT -> turn(-90);
+            // Max rotation the Rover can mathematically possible drive is 10 degrees
+            case RIGHT -> turn(10);
+            case LEFT -> turn(-10);
             default -> {
             }
         }
@@ -131,6 +136,8 @@ public class Rover extends Actor {
         if (munitions > 0) {
             Beam beam = new Beam(this);
             munitions--;
+
+            sleepFor(10);
         }
     }
 
@@ -149,12 +156,8 @@ public class Rover extends Actor {
      * @return true if there is an object ahead, false otherwise
      */
     public boolean isObjectAhead(Class<? extends Actor> object) {
-        int rot = getRotation();
-
-        return (getOneObjectAtOffset(1, 0, object) != null && rot == 0) ||
-                (getOneObjectAtOffset(0, 1, object) != null && rot == 90) ||
-                (getOneObjectAtOffset(-1, 0, object) != null && rot == 180) ||
-                (getOneObjectAtOffset(0, -1, object) != null && rot == 270);
+        int[] nextPosition = getPositionInSteps(moveSpeed);
+        return getOneObjectAtOffset(nextPosition[0], nextPosition[1], object) != null;
     }
 
     /**
@@ -202,6 +205,31 @@ public class Rover extends Actor {
     }
 
     /**
+     * Moves the rover to the specified distance in the x direction
+     * while changing y based on the current rotation.
+     * 
+     * @param xDistance the distance to move in the x direction
+     */
+    public void move(int absoluteDistance) {
+        int[] nextPosition = getPositionInSteps(absoluteDistance);
+        setLocation(getX() + nextPosition[0], getY() + nextPosition[1]);
+    }
+
+    /**
+     * Calculates the next position in steps based on the absolute distance
+     * and the current rotation.
+     * 
+     * @param absoluteDistance the absolute distance to move
+     * @return an array containing the x and y distances to move
+     */
+    private int[] getPositionInSteps(int absoluteDistance) {
+        int xDistance = (int) (absoluteDistance * Math.cos(Math.toRadians(getRotation())));
+        int yDistance = (int) (absoluteDistance * Math.sin(Math.toRadians(getRotation())));
+
+        return new int[] { xDistance, yDistance };
+    }
+
+    /**
      * A helper class for displaying the rovers lives and munitions.
      * 
      * @version 1.0.0 - 02.10.2025
@@ -215,9 +243,9 @@ public class Rover extends Actor {
             setImage("images/nachricht.png");
 
             if (roverTyp == Typ.RED) {
-                world.addObject(this, 2, 3);
+                world.addObject(this, 125, 125);
             } else {
-                world.addObject(this, 21, 3);
+                world.addObject(this, 1175, 125);
             }
         }
 
@@ -283,15 +311,19 @@ public class Rover extends Actor {
             }
 
             if (isRoverHit()) {
-                ((Rover) getOneObjectAtOffset(0, 0, Rover.class)).hit();
+                ((Rover) getOneIntersectingObject(Rover.class)).hit();
                 getWorld().removeObject(this);
                 return;
             }
 
-            move(1);
+            move((int) (moveSpeed * 1.8));
 
             if (x == this.getX() && y == this.getY()) {
                 // If it is stuck at the edge, remove it
+                getWorld().removeObject(this);
+            }
+
+            if (isAtEdge()) {
                 getWorld().removeObject(this);
             }
         }
@@ -302,7 +334,7 @@ public class Rover extends Actor {
          * @return true if the beam has hit a hill, false otherwise
          */
         public boolean isHillHit() {
-            return (getOneObjectAtOffset(0, 0, Hill.class) != null);
+            return (getOneIntersectingObject(Hill.class) != null);
         }
 
         /**
@@ -311,7 +343,7 @@ public class Rover extends Actor {
          * @return true if the beam has hit a scoreboard, false otherwise
          */
         public boolean isScoreboardHit() {
-            return (getOneObjectAtOffset(0, 0, Scoreboard.class) != null);
+            return (getOneIntersectingObject(Scoreboard.class) != null);
         }
 
         /**
@@ -320,8 +352,13 @@ public class Rover extends Actor {
          * @return true if the beam has hit a rover, false otherwise
          */
         public boolean isRoverHit() {
-            return (getOneObjectAtOffset(0, 0, Rover.class) != null &&
-                    getOneObjectAtOffset(0, 0, Rover.class) != shooter);
+            return (getOneIntersectingObject(Rover.class) != null &&
+                    getOneIntersectingObject(Rover.class) != shooter);
+        }
+
+        public boolean isAtEdge() {
+            return (getX() <= 0 || getX() + 2 >= getWorld().getWidth() ||
+                    getY() <= 0 || getY() + 2 >= getWorld().getHeight());
         }
     }
 
