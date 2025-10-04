@@ -118,9 +118,8 @@ public class Rover extends Actor {
      */
     public void turn(Direction direction) {
         switch (direction) {
-            // Max rotation the Rover can mathematically possible drive is 10 degrees
-            case RIGHT -> turn(10);
-            case LEFT -> turn(-10);
+            case RIGHT -> turn(4);
+            case LEFT -> turn(-4);
             default -> {
             }
         }
@@ -268,7 +267,7 @@ public class Rover extends Actor {
          */
         public Fire(Rover rover) {
             this.burningRover = rover;
-            rover.getWorld().addObject(this, rover.getX() + 10, rover.getY() - 15);
+            rover.getWorld().addObject(this, rover.getX(), rover.getY() - 5);
         }
 
         /**
