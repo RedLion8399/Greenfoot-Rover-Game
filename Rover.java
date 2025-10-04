@@ -28,6 +28,8 @@ public class Rover extends Actor {
      */
     public Rover(Typ roverTyp) {
         this.roverTyp = roverTyp;
+        this.lives = 5;
+        this.munitions = 5;
 
         if (roverTyp == Typ.RED) {
             setImage("images/roverRed.png");
@@ -116,9 +118,8 @@ public class Rover extends Actor {
      */
     public void turn(Direction direction) {
         switch (direction) {
-            // Max rotation the Rover can mathematically possible drive is 10 degrees
-            case RIGHT -> turn(10);
-            case LEFT -> turn(-10);
+            case RIGHT -> turn(4);
+            case LEFT -> turn(-4);
             default -> {
             }
         }
@@ -146,6 +147,20 @@ public class Rover extends Actor {
      * The rover will loose one life.
      */
     public void hit() {
+        lives--;
+
+        if (lives == 0) {
+            burn();
+        }
+    }
+
+    /**
+     * Called when the rover's life count reaches zero.
+     * A Fire actor will be added to the world, indicating that the rover has been
+     * destroyed.
+     */
+    public void burn() {
+        new Fire(this);
     }
 
     /**
@@ -227,6 +242,59 @@ public class Rover extends Actor {
         int yDistance = (int) (absoluteDistance * Math.sin(Math.toRadians(getRotation())));
 
         return new int[] { xDistance, yDistance };
+    }
+
+    /**
+     * A helper class to set the rovers on fire.
+     * It displays a flame for a few secound if
+     * the rover has no lives left after being
+     * hit by a beam and burns out.
+     * 
+     * @see Rover#burn
+     * 
+     * @version 0.1.0 - 03.10.2025
+     * @author Paul Jonas Dohle
+     */
+    class Fire extends Actor {
+
+        private int imageState = 0;
+        private Rover burningRover;
+
+        /**
+         * Constructor for the Fire class.
+         * 
+         * @param rover the rover that is on fire
+         */
+        public Fire(Rover rover) {
+            this.burningRover = rover;
+            rover.getWorld().addObject(this, rover.getX(), rover.getY() - 5);
+        }
+
+        /**
+         * The act method updates the image of the fire
+         * and deletes the animation and the rover after
+         * a few seconds.
+         */
+        public void act() {
+            switch (imageState % 4) {
+                case 0 -> setImage("images/fire1.png");
+                case 1 -> setImage("images/fire2.png");
+                case 2 -> setImage("images/fire3.png");
+                case 3 -> setImage("images/fire4.png");
+
+                default -> {
+                }
+            }
+
+            imageState++;
+            sleepFor(15);
+
+            if (imageState == 48) {
+                getWorld().removeObject(burningRover);
+                getWorld().removeObject(this);
+                Greenfoot.stop();
+            }
+        }
     }
 
     /**
