@@ -20,6 +20,7 @@ public class Rover extends Actor {
     private Scoreboard scoreboard;
     private Typ roverTyp;
     private int moveSpeed = 10;
+    private boolean burning = false;
 
     private GreenfootSound shootSound = new GreenfootSound("sounds/shoot.mp3");
     private GreenfootSound hitSound = new GreenfootSound("sounds/hit.mp3");
@@ -137,20 +138,30 @@ public class Rover extends Actor {
      * If it hits a rover, the rover which was hit will loose one life.
      * If it hits a hill, the beam will be destroyed.
      * The beam will move in a straight line until it hits something.
+     * It consumes one munition per shot.
+     * The rover cannot shoot while burning or if it has no munitions left.
+     * 
+     * @see Rover.Beam
      */
     public void shoot() {
-        if (munitions > 0) {
-            shootSound.play();
-            Beam beam = new Beam(this);
-            munitions--;
-
-            sleepFor(10);
+        if (burning) {
+            return;
         }
+        if (munitions <= 0) {
+            return;
+        }
+
+        shootSound.play();
+        Beam beam = new Beam(this);
+        munitions--;
+
+        sleepFor(10);
     }
 
     /**
      * Called when the rover has been hit by a beam.
      * The rover will loose one life.
+     * If the life count reaches zero, the rover will start to burn.
      */
     public void hit() {
         lives--;
@@ -168,6 +179,7 @@ public class Rover extends Actor {
      * destroyed.
      */
     public void burn() {
+        burning = true;
         new Fire(this);
     }
 
@@ -267,6 +279,7 @@ public class Rover extends Actor {
 
         private int imageState = 0;
         private Rover burningRover;
+        private int actCounter = 0;
 
         /**
          * Constructor for the Fire class.
@@ -284,6 +297,9 @@ public class Rover extends Actor {
          * a few seconds.
          */
         public void act() {
+            placOnRover();
+            actCounter++;
+
             switch (imageState % 4) {
                 case 0 -> setImage("images/fire1.png");
                 case 1 -> setImage("images/fire2.png");
@@ -294,14 +310,25 @@ public class Rover extends Actor {
                 }
             }
 
+            if (actCounter % 15 != 0) {
+                return;
+            }
+
             imageState++;
-            sleepFor(15);
 
             if (imageState == 48) {
                 getWorld().removeObject(burningRover);
                 getWorld().removeObject(this);
                 Greenfoot.stop();
             }
+        }
+
+        /**
+         * Places the fire animation on the rover's position,
+         * but 5 pixels above the rover.
+         */
+        private void placOnRover() {
+            setLocation(burningRover.getX(), burningRover.getY() - 5);
         }
     }
 
