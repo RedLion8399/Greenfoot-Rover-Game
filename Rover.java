@@ -21,6 +21,11 @@ public class Rover extends Actor {
     private Typ roverTyp;
     private int moveSpeed = 10;
 
+    private GreenfootSound shootSound = new GreenfootSound("sounds/shoot.mp3");
+    private GreenfootSound hitSound = new GreenfootSound("sounds/hit.mp3");
+    private GreenfootSound missSound = new GreenfootSound("sounds/miss.mp3");
+    private GreenfootSound failSound = new GreenfootSound("sounds/fail.mp3");
+
     /**
      * Creates a new Rover.
      * 
@@ -135,6 +140,7 @@ public class Rover extends Actor {
      */
     public void shoot() {
         if (munitions > 0) {
+            shootSound.play();
             Beam beam = new Beam(this);
             munitions--;
 
@@ -148,9 +154,11 @@ public class Rover extends Actor {
      */
     public void hit() {
         lives--;
+        hitSound.play();
 
         if (lives == 0) {
             burn();
+            failSound.play();
         }
     }
 
@@ -374,6 +382,7 @@ public class Rover extends Actor {
             int y = this.getY();
 
             if (isHillHit() || isScoreboardHit()) {
+                missSound.play();
                 getWorld().removeObject(this);
                 return;
             }
@@ -388,10 +397,12 @@ public class Rover extends Actor {
 
             if (x == this.getX() && y == this.getY()) {
                 // If it is stuck at the edge, remove it
+                missSound.play();
                 getWorld().removeObject(this);
             }
 
             if (isAtEdge()) {
+                missSound.play();
                 getWorld().removeObject(this);
             }
         }
